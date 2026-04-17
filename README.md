@@ -1,115 +1,172 @@
-# Imobiliaria UniImmobile
+# 🏠 UniImmobile — Real Estate Management System
 
-## Integrantes do Grupo:
+## 📌 Sobre o Projeto
 
-<ul>
-    <li>
-        <a href="https://www.github.com/BernardoSsilva"> Bernardo Santos Da Silva (Owner)</a>
-    </li>
-    <li>
-        <a href="https://github.com/ElyeserGabrian">Elyeser Gabrian Nunes</a>
-    </li>
-    <li>
-        <a href="https://github.com/GabrielSavioPereira">Gabriel Savio Pereira</a>
-    </li>
-    <li>
-        <a href="https://github.com/Josue-RR">Josué Ramos da Rosa</a>
-    </li>
-    <li>
-        <a href="https://github.com/VitorBotome">Vitor Botome</a>
-    </li>
-</ul>
+O **UniImmobile** é uma aplicação desenvolvida para um cliente real, com o objetivo de **centralizar e otimizar o processo de anúncio, gestão e visualização de imóveis**.
 
-# Especificações do projeto
+A plataforma foi construída para substituir métodos informais de divulgação, como redes sociais ou indicações verbais, oferecendo uma solução estruturada para imobiliárias e clientes.
 
-## Tecnologias
+---
 
-<img src="https://skillicons.dev/icons?i=js,html,css,react,tailwind,github" />
+## 🎯 Objetivo
 
-## Descrição do projeto
+O sistema tem como foco:
 
-O projeto UniImmobile é um sistema de unificação de funcionalidades para aprimorar o processo de anuncio e vendas de imóveis em Santa Catarina.
+* Facilitar o gerenciamento de imóveis para imobiliárias
+* Melhorar a experiência de usuários interessados em compra ou aluguel
+* Centralizar informações relevantes de imóveis em uma única plataforma
 
-## Objetivo
+---
 
-O objetivo do projeto é ser uma alternativa a postagem de imóveis em redes sociais ou por via oral, buscando reunir informações relevantes para a venda, ou aluguel, de terrenos, casas e apartamentos.
+## 👥 Público-Alvo
 
-## Publico alvo
+A aplicação atende dois perfis principais:
 
-O publico alvo pondera entre 2 grupos:
+* 🏢 Proprietários e funcionários de imobiliárias
+* 🏡 Clientes interessados em imóveis
 
-- Dono e funcionários de imobiliária;
-- Pessoas interessadas em terrenos, casas e apartamentos;
+---
 
-## Estrutura do projeto
+## 🧠 Arquitetura da Solução
 
-### Pagina de administração
+A aplicação foi dividida em dois contextos principais:
 
-A pagina de administração sera acessível apenas mediante a autenticação. Esta pagina será voltada para administração de usuários, imoveis e imagens.
+### 🔐 Área Administrativa
 
-Ao entrar nesta pagina um usuário administrador poderá acessar os módulos de registro de novos usuários e registro de imóveis.
+Acessível apenas mediante autenticação, permite:
 
-No modulo de registro de usuário serão informados os dados de: telefone, email, nome, cpf e data de nascimento.
+* Gerenciamento de usuários
+* Cadastro e edição de imóveis
+* Controle de imagens vinculadas aos imóveis
 
-No modulo de registro de imóveis haverão dois sub-módulos, o módulo de informações de imóvel, onde serão registrados dados como: endereço, link do google maps, cep, proprietário, número de telefone do responsável, presença de escritura do imóvel, etc; e o módulo de registro de imagens, onde serão vinculadas imagens ao imóvel selecionado.
+#### Funcionalidades:
 
-### Pagina de cliente
+* Cadastro de usuários (nome, CPF, email, telefone, data de nascimento)
+* Cadastro de imóveis (endereço, localização, proprietário, dados complementares)
+* Upload e gerenciamento de imagens por imóvel
 
-A pagina do cliente será acessível sem autenticação, onde o usuário poderá visualizar informações dos imóveis e poderá ser redirecionado para troca de mensagens com o responsável do imóvel.
+---
 
-## funcionalidades
+### 🌐 Área Pública (Cliente)
 
-- Gerenciamento de usuários;
-- Gerenciamento de registros de imóveis;
-- Visualização de Imóveis
-- Visualização de Usuários
+Acessível sem autenticação:
 
-## Padronização do projeto
+* Visualização de imóveis disponíveis
+* Acesso às informações detalhadas
+* Redirecionamento para contato com responsáveis
 
-lingua de utilização: Inglês
-Variaveis: **camelCase 🐫**  
-Funções e objetos: **PascalCase**
+---
 
-### Organização de pastas
+## ⚙️ Tecnologias Utilizadas
 
-📁 **src/**  
-├── 📁 **Components/**  
-│ └─ <span style="opacity: 0.6;">Componentes globais reutilizáveis.</span>  
-│
-├── 📁 **Services/**  
-│ └─ <span style="opacity: 0.6;">Funções de serviço utilizadas pela aplicação inteira (ex: requisições HTTP).</span>  
-│
-├── 📁 **Styles/**  
-│ └── <span style="opacity: 0.6;">Estilos globais da aplicação (CSS).</span>  
-│
-├── 📁 **Models/**  
-│ └── <span style="opacity: 0.6;">Classes e interfaces modelo da aplicação.</span>  
-│
-├── 📁 **Utilities/**  
-│ └── <span style="opacity: 0.6;">Funções utilitárias reutilizáveis em toda a aplicação.</span>  
-│
-├── 📁 **Pages/**  
-│ └─── <span style="opacity: 0.6;">Contém as páginas da aplicação.</span>  
-│
-│ └── 📁 _Nome_da_pagina_/  
-│ ├─── 📄 _Nome_da_pagina_  
-│ └─── 📁 **Components/**  
-│ └──── 📄 _Nome_do_componente_  
-│ └──── <span style="opacity: 0.6;">Componentes específicos da página.</span>
+* React.js
+* TailwindCSS
+* JavaScript
+* GitHub
 
-# Como realizar instalação do projeto?
+---
 
-1. Realizar a clonagem do repositório:  
-   `$ git clone https://github.com/BernardoSsilva/Trabalho-ABP.git `
+## 📐 Padrões e Organização
 
-2. Acessar branch de desejada:  
-   `$ git checkout <Nome_Da_Branch>`
+O projeto segue padrões de organização visando escalabilidade e manutenção:
 
-3. acessar a pasta do projeto:  
-   `$ cd Imobiliaria_UniImmobile`
+### Convenções de código:
 
-4. Realizar instalação dos pacotes:  
-   `$ npm install`
+* camelCase para variáveis
+* PascalCase para funções e objetos
 
-5. Iniciar o preto:  
-   `$ npm run dev`
+---
+
+### Estrutura de pastas:
+
+* **Components/** → Componentes reutilizáveis
+* **Services/** → Comunicação com APIs e requisições HTTP
+* **Styles/** → Estilos globais
+* **Models/** → Estruturas de dados e interfaces
+* **Utilities/** → Funções auxiliares
+* **Pages/** → Páginas da aplicação
+
+---
+
+## 🚀 Instalação e Execução
+
+### 1. Clonar o repositório
+
+```bash id="9xg1ks"
+git clone <repo-url>
+```
+
+---
+
+### 2. Acessar o projeto
+
+```bash id="2kq7ap"
+cd Imobiliaria_UniImmobile
+```
+
+---
+
+### 3. Instalar dependências
+
+```bash id="v3n8fd"
+npm install
+```
+
+---
+
+### 4. Executar aplicação
+
+```bash id="r1t5lm"
+npm run dev
+```
+
+---
+
+## 👨‍💻 Contexto de Desenvolvimento
+
+Este projeto foi desenvolvido como uma solução real para uma imobiliária, envolvendo:
+
+* Levantamento de requisitos com cliente
+* Desenvolvimento full stack (frontend + backend)
+* Implementação de autenticação e controle de acesso
+* Gestão de dados estruturados de imóveis e usuários
+
+---
+
+## 💡 Funcionalidades
+
+* Autenticação de usuários (JWT no backend)
+* CRUD completo de imóveis
+* Gerenciamento de usuários
+* Gerenciamento de imagens vinculadas aos imóveis
+* Visualização pública de imóveis
+
+---
+
+## 📈 Possíveis Evoluções
+
+* Integração com mapa (Google Maps API)
+* Sistema de mensagens entre cliente e corretor
+* Melhorias no fluxo de upload de imagens
+* Deploy em ambiente cloud
+* Versionamento de imóveis e histórico de alterações
+
+---
+
+## 📌 Observação
+
+Este projeto foi desenvolvido em um período curto (~2 semanas), priorizando entrega funcional e validação de requisitos com o cliente.
+
+---
+
+## 💬 Considerações Finais
+
+O UniImmobile representa uma experiência de desenvolvimento orientada a cliente real, envolvendo:
+
+* Entrega sob prazo curto
+* Estruturação de aplicação full stack
+* Implementação de regras de negócio reais
+* Experiência prática com autenticação e CRUDs complexos
+
+---
+
