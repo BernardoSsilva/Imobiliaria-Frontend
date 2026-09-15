@@ -1,4 +1,4 @@
-import { Button, Chip } from "@heroui/react";
+import { Avatar, Button, Chip } from "@heroui/react";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import timezone from "dayjs/plugin/timezone";
@@ -84,7 +84,16 @@ export function UsersList() {
                     <tbody className="divide-y divide-gray-100">
                         {usersData.length > 0 && usersData.map((row) => (
                             <tr key={row.id} className="hover:bg-gray-50">
-                                <td className="py-3 pr-3 font-medium">{row.userName}</td>
+                                <td className="py-3 pr-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <Avatar size="sm" color="accent">
+                                            <Avatar.Fallback>
+                                                {row.userName.slice(0, 2).toUpperCase()}
+                                            </Avatar.Fallback>
+                                        </Avatar>
+                                        <span className="font-medium">{row.userName}</span>
+                                    </div>
+                                </td>
                                 <td className="py-3 pr-3">
                                     {dayjs(row.bornDate).tz("America/Sao_Paulo").format("D [de] MMMM [de] YYYY")}
                                 </td>

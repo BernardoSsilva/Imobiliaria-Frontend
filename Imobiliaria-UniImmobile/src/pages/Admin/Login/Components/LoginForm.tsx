@@ -50,7 +50,15 @@ export function LoginForm() {
         <>
             <LoadingOverlay open={isLoading} label="Processando dados" />
 
-            <div className="flex w-full flex-col items-center justify-center px-6 py-10 sm:w-1/2">
+            <div className="flex w-full flex-col items-center justify-center gap-10 px-6 py-10 sm:w-1/2">
+
+                <div className="flex flex-col items-center gap-2 text-center">
+                    <img className="w-24" src={logo} alt="Logo da aplicação" />
+                    <h1 className="font-serif text-2xl font-bold text-(--primary-color)">
+                        Bem-vindo de volta
+                    </h1>
+                    <p className="text-sm text-gray-500">Acesse o painel administrativo</p>
+                </div>
 
                 <form
                     className="flex w-full max-w-sm flex-col items-center gap-5"
@@ -59,8 +67,6 @@ export function LoginForm() {
                         executeLogin();
                     }}
                 >
-                    <img className="w-28" src={logo} alt="Logo da aplicação" />
-
                     <TextField
                         className="w-full"
                         isRequired
@@ -95,9 +101,14 @@ export function LoginForm() {
                     </Button>
                 </form>
 
-                <h2 className="mt-20 text-center font-semibold text-(--primary-color)">
-                    SUA SATISFAÇÃO É O NOSSO LEMA!
-                </h2>
+                <div className="flex w-full max-w-sm flex-col items-center gap-2 border-t border-gray-200 pt-6">
+                    <p className="text-xs tracking-[0.2em] text-(--brand-sand) uppercase">
+                        Douglas Costa
+                    </p>
+                    <h2 className="text-center text-sm font-semibold text-(--primary-color)">
+                        SUA SATISFAÇÃO É O NOSSO LEMA!
+                    </h2>
+                </div>
 
                 {errorMessage && (
                     <Alert status="danger" className="mt-6 w-full max-w-sm">

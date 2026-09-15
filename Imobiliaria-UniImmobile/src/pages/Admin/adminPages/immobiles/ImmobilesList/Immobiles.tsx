@@ -7,6 +7,7 @@ import { Images, Pen, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppPagination } from "../../../../../components/AppPagination";
 import { LoadingOverlay } from "../../../../../components/LoadingOverlay";
+import { immobileTypeChipClass } from "../../../../../lib/immobileTypeStyles";
 import type { ImmobilesShortData } from "../../../../../models/responseInterfaces/ImmobilesShortData";
 import { BrazilianState } from "../../../../../models/types/brazilianStatesEnum";
 import { ImmobileTypesEnum } from "../../../../../models/types/immobileTypesEnum";
@@ -18,6 +19,9 @@ import { ImmobileDeleteDialog } from "./components/ImmobileDeleteDialog";
 dayjs.locale("pt-br");
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+const getTypeLabel = (row: ImmobilesShortData) =>
+    Object.values(ImmobileTypesEnum)[parseInt(row.immobileType)] as ImmobileTypesEnum;
 
 const formatCurrency = (value: number) => {
     if (!value) return "";
@@ -99,8 +103,8 @@ export function ImmobileList() {
                         {immobilesData.length > 0 && immobilesData.map((row) => (
                             <tr key={row.id} className="hover:bg-gray-50">
                                 <td className="py-3 pr-3">
-                                    <Chip size="sm" className="bg-(--primary-color) text-white">
-                                        {Object.values(ImmobileTypesEnum)[parseInt(row.immobileType)]}
+                                    <Chip size="sm" className={immobileTypeChipClass[getTypeLabel(row)] ?? "bg-(--primary-color) text-white"}>
+                                        {getTypeLabel(row)}
                                     </Chip>
                                 </td>
                                 <td className="py-3 pr-3">{row.postalCode}</td>

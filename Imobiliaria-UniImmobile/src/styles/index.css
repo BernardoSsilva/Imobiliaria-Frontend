@@ -16,6 +16,11 @@
   --primary-color-hover: #16234f;
   --color-font-title: #fff;
 
+  /* Warm neutral used as a secondary accent (eyebrow text, dividers,
+     subtle highlights) so the navy doesn't carry every UI moment. */
+  --brand-sand: #9c8560;
+  --brand-sand-light: #cbb693;
+
   /* Map the brand navy onto the HeroUI theme tokens so every HeroUI
      component (buttons, focus rings, links, etc.) uses it automatically. */
   --accent: var(--primary-color);

@@ -2,7 +2,7 @@ import logo from "../assets/NavBarLogo.png"
 
 export function NavBar({ nameTitle = "" }) {
     return (
-        <nav className="sticky top-0 z-30 w-full border-b border-white/10 bg-(--primary-color) shadow-md shadow-black/20">
+        <nav className="sticky top-0 z-30 w-full bg-(--primary-color) shadow-lg shadow-black/20">
             <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
                 <img className="h-12 w-auto object-contain sm:h-14" src={logo} alt="UniImmobile" />
                 {nameTitle && (
@@ -11,6 +11,7 @@ export function NavBar({ nameTitle = "" }) {
                     </h3>
                 )}
             </div>
+            <div className="h-[3px] w-full bg-gradient-to-r from-(--brand-sand-light) via-(--brand-sand) to-(--brand-sand-light) opacity-70" />
         </nav>
     )
 }
