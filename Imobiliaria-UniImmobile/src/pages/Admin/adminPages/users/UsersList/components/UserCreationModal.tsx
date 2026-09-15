@@ -1,23 +1,18 @@
 import {
     Alert,
     Button,
-    FormControl,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
+    Input,
+    InputGroup,
+    Label,
     Modal,
-    OutlinedInput,
-    Select,
     TextField,
-} from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+} from "@heroui/react";
+import { inputVariants } from "@heroui/react/input";
 import type { AxiosResponse } from "axios";
 import dayjs, { Dayjs } from "dayjs";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
+import { FormSelect } from "../../../../../../components/FormSelect";
 import type { UserCreationDto } from "../../../../../../models/DTOs/userCreationDto";
 import type { UserUpdateDto } from "../../../../../../models/DTOs/userUpdateDto";
 import { UserRolesEnum } from "../../../../../../models/types/userRolesEnum";
@@ -30,6 +25,11 @@ type Props = {
     userId: string | null
     setSelectedUserId: (value: string | null) => void
 }
+
+const roleOptions = [
+    { key: "ADMIN", label: "Admin" },
+    { key: "OPERATOR", label: "Operador" },
+];
 
 export function UserCreationModal({ isModalOpen, setIsModalOpen, userId, setSelectedUserId }: Props) {
     const [user, setUser] = useState<UserEntity>()
@@ -201,184 +201,119 @@ export function UserCreationModal({ isModalOpen, setIsModalOpen, userId, setSele
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const handleClickShowPasswordConfirmation = () => setShowPasswordConfirmation((showConfirmation) => !showConfirmation);
-
-    const handleMouseDownPasswordConfirmation = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const handleMouseUpPasswordConfirmation = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-
     return <>
-        <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)} className="h-10">
-            <div className="fixed inset-0 flex items-center justify-center ">
-                <div className="bg-white w-full max-w-md  h-[80%] rounded-2xl shadow-lg p-6 overflow-scroll [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:bg-transparent
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-transparent
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500" >
-                    <h2 className="text-xl font-semibold mb-4 text-center">Cadastrar Usuário</h2>
+        <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+            <Modal.Backdrop>
+                <Modal.Container>
+                    <Modal.Dialog className="max-h-[85vh] overflow-y-auto">
+                        <Modal.Header>
+                            <Modal.Heading>
+                                {userId ? "Editar Usuário" : "Cadastrar Usuário"}
+                            </Modal.Heading>
+                            <Modal.CloseTrigger onPress={() => setIsModalOpen(false)} />
+                        </Modal.Header>
 
-                    <form
-                        className="flex flex-col gap-4"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            saveUser();
-                        }}
-                    >
-                        <TextField
-                            label="Nome"
-                            name="userName"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            fullWidth
-                        />
-
-                        <TextField
-                            label="E-mail"
-                            type="email"
-                            name="userEmail"
-                            value={userEmail}
-                            onChange={(e) => setUserEmail(e.target.value)}
-                            fullWidth
-                        />
-
-                        <FormControl fullWidth>
-                            <InputLabel id="role-label">Papel do Usuário</InputLabel>
-                            <Select
-                                labelId="role-label"
-                                name="userRole"
-                                value={userRole}
-                                onChange={(e) => setUserRole(e.target.value)}
-                            >
-                                <MenuItem value={"ADMIN"}>Admin</MenuItem>
-                                <MenuItem value={"OPERATOR"}>Operador</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
-                            <OutlinedInput
-                                label="Telefone"
-                                type="tel"
-                                name="phone"
-                                placeholder="99 999999999"
-                                value={userPhone}
-                                onChange={(e) => setUserPhone(e.target.value)}
-                                fullWidth />
-                            Somente Números
-                        </FormControl>
-
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                                label="Data de Nascimento"
-                                value={userBornDate}
-                                onChange={(newValue) => setUserBornDate(newValue)}
-                                format="DD/MM/YYYY"
-                                slotProps={{
-                                    textField: {
-                                        fullWidth: true,
-                                        margin: "normal",
-                                    },
-                                }}
-                            />
-                        </LocalizationProvider>
-
-                        {userId == null && (
-                            <>
-                                <FormControl className="border border-solid rounded-md w-full" variant="outlined" >
-                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                    <OutlinedInput
-                                        value={userPassword}
-                                        onChange={(e) => { setUserPassword(e.target.value) }}
-                                        id="outlined-adornment-password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label={
-                                                        showPassword ? 'hide the password' : 'display the password'
-                                                    }
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    onMouseUp={handleMouseUpPassword}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <EyeClosed /> : <Eye />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Digite a senha"
-                                    />
-                                </FormControl>
-                                <FormControl className="border border-solid rounded-md w-full" variant="outlined" >
-                                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                                    <OutlinedInput
-                                        value={userPasswordConfirmation}
-                                        onChange={(e) => { setUserPasswordConfirmation(e.target.value) }}
-                                        id="outlined-adornment-password"
-                                        type={showPasswordConfirmation ? 'text' : 'password'}
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label={
-                                                        showPasswordConfirmation ? 'hide the password' : 'display the password'
-                                                    }
-                                                    onClick={handleClickShowPasswordConfirmation}
-                                                    onMouseDown={handleMouseDownPasswordConfirmation}
-                                                    onMouseUp={handleMouseUpPasswordConfirmation}
-                                                    edge="end"
-                                                >
-                                                    {showPasswordConfirmation ? <EyeClosed /> : <Eye />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                        label="Confirmar senha"
-                                    />
-                                </FormControl>
-                            </>
-                        )}
-                        <div className="flex justify-between">
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                sx={{ width: "40%" }}
-                            >
-                                Salvar
-                            </Button>
-
-                            <Button
-                                variant="contained"
-                                color="error"
-                                sx={{ width: "40%" }}
-                                onClick={(e) => {
+                        <Modal.Body>
+                            <form
+                                className="flex flex-col gap-4"
+                                onSubmit={(e) => {
                                     e.preventDefault();
-                                    setIsModalOpen(false);
+                                    saveUser();
                                 }}
                             >
-                                Cancelar
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            </div >
-        </Modal >
+                                <TextField value={userName} onChange={setUserName}>
+                                    <Label>Nome</Label>
+                                    <Input />
+                                </TextField>
+
+                                <TextField value={userEmail} onChange={setUserEmail} type="email">
+                                    <Label>E-mail</Label>
+                                    <Input />
+                                </TextField>
+
+                                <FormSelect
+                                    label="Papel do Usuário"
+                                    selectedKey={userRole}
+                                    onSelectionChange={(key) => setUserRole(key as UserRolesEnum)}
+                                    options={roleOptions}
+                                />
+
+                                <TextField value={userPhone} onChange={setUserPhone} type="tel">
+                                    <Label>Telefone</Label>
+                                    <Input placeholder="99 999999999" />
+                                </TextField>
+
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-sm font-medium text-foreground">Data de Nascimento</label>
+                                    <input
+                                        type="date"
+                                        className={inputVariants({ fullWidth: true })}
+                                        value={userBornDate ? userBornDate.format("YYYY-MM-DD") : ""}
+                                        onChange={(e) => setUserBornDate(e.target.value ? dayjs(e.target.value) : null)}
+                                    />
+                                </div>
+
+                                {userId == null && (
+                                    <>
+                                        <TextField value={userPassword} onChange={setUserPassword}>
+                                            <Label>Senha</Label>
+                                            <InputGroup>
+                                                <InputGroup.Input type={showPassword ? "text" : "password"} />
+                                                <InputGroup.Suffix>
+                                                    <Button
+                                                        isIconOnly
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onPress={() => setShowPassword((show) => !show)}
+                                                    >
+                                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                    </Button>
+                                                </InputGroup.Suffix>
+                                            </InputGroup>
+                                        </TextField>
+
+                                        <TextField value={userPasswordConfirmation} onChange={setUserPasswordConfirmation}>
+                                            <Label>Confirmar senha</Label>
+                                            <InputGroup>
+                                                <InputGroup.Input type={showPasswordConfirmation ? "text" : "password"} />
+                                                <InputGroup.Suffix>
+                                                    <Button
+                                                        isIconOnly
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onPress={() => setShowPasswordConfirmation((show) => !show)}
+                                                    >
+                                                        {showPasswordConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                    </Button>
+                                                </InputGroup.Suffix>
+                                            </InputGroup>
+                                        </TextField>
+                                    </>
+                                )}
+                                <div className="flex justify-between pt-2">
+                                    <Button type="submit" className="w-[45%]">
+                                        Salvar
+                                    </Button>
+
+                                    <Button
+                                        variant="danger"
+                                        className="w-[45%]"
+                                        onPress={() => setIsModalOpen(false)}
+                                    >
+                                        Cancelar
+                                    </Button>
+                                </div>
+                            </form>
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
+        </Modal>
         {errorMessage && (
-            <Alert variant="filled" severity="error">
-                {errorMessage}
+            <Alert status="danger" className="fixed bottom-4 left-1/2 z-[60] w-full max-w-md -translate-x-1/2">
+                <Alert.Content>
+                    <Alert.Title>{errorMessage}</Alert.Title>
+                </Alert.Content>
             </Alert>
         )}
     </>

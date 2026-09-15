@@ -1,7 +1,8 @@
-import { Alert, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, OutlinedInput, Select, TextField } from "@mui/material";
+import { Alert, Button, Checkbox, Input, Label, Modal, TextArea, TextField } from "@heroui/react";
 import type { AxiosError } from "axios";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FormSelect } from "../../../../../../components/FormSelect";
 import type { ImmobileCreationDto } from "../../../../../../models/DTOs/ImmobileCreationDTO";
 import type { ImmobileUpdateDto } from "../../../../../../models/DTOs/ImmobileUpdateDto";
 import { BrazilianState } from "../../../../../../models/types/brazilianStatesEnum";
@@ -14,6 +15,9 @@ type Props = {
     selectedImmobileId: string | null
     setSelectedImmobileId: (value: string | null) => void;
 }
+
+const immobileTypeOptions = Object.values(ImmobileTypesEnum).map((name) => ({ key: name, label: name }));
+const stateOptions = Object.values(BrazilianState).map((uf) => ({ key: uf, label: uf }));
 
 export function ImmobilesCreationModal(
     {
@@ -184,167 +188,130 @@ export function ImmobilesCreationModal(
 
     return (
         <>
-            <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <div className="fixed inset-0 flex items-center justify-center">
-                    <div
-                        className="bg-white w-full max-w-md h-[80%] rounded-2xl shadow-lg p-6 overflow-scroll
-                        [&::-webkit-scrollbar]:w-2
-                        [&::-webkit-scrollbar-track]:bg-transparent
-                        [&::-webkit-scrollbar-thumb]:bg-gray-300
-                        dark:[&::-webkit-scrollbar-track]:bg-transparent
-                        dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-                    >
-                        <h2 className="text-xl font-semibold mb-4 text-center">Cadastrar Imóvel</h2>
+            <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
+                <Modal.Backdrop>
+                    <Modal.Container>
+                        <Modal.Dialog className="max-h-[85vh] overflow-y-auto">
+                            <Modal.Header>
+                                <Modal.Heading>
+                                    {selectedImmobileId ? "Editar Imóvel" : "Cadastrar Imóvel"}
+                                </Modal.Heading>
+                                <Modal.CloseTrigger onPress={resetForm} />
+                            </Modal.Header>
 
-                        <form
-                            className="flex flex-col gap-4"
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                saveImmobile();
-                            }}
-                        >
-                            <FormControl fullWidth>
-                                <InputLabel id="immobile-type-label">Tipo de Imóvel</InputLabel>
-                                <Select
-                                    labelId="immobile-type-label"
-                                    value={immobileType}
-                                    onChange={(e) =>
-                                        setImmobileType(e.target.value as ImmobileTypesEnum)
-                                    }
-                                >
-                                    {Object.values(ImmobileTypesEnum).map((name) => (
-                                        <MenuItem key={name} value={name}>
-                                            {name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-
-                            <TextField
-                                label="Titulo do imóvel"
-                                value={localityInfo}
-                                onChange={(e) => setLocalityInfo(e.target.value)}
-                                fullWidth
-                            />
-
-                            <TextField
-                                label="Código Postal"
-                                value={postalCode}
-                                onChange={(e) => {
-                                    const formatted = formatCEP(e.target.value);
-                                    setPostalCode(formatted);
-
-                                    const cleanCep = formatted.replace(/\D/g, "");
-                                    if (cleanCep.length === 8) {
-                                        fetchCepData(cleanCep);
-                                    }
-                                }}
-                                fullWidth
-                            />
-
-                            <FormControl fullWidth>
-                                <InputLabel id="state-label">Estado</InputLabel>
-                                <Select
-                                    labelId="state-label"
-                                    value={state}
-                                    onChange={(e) => setState(e.target.value as BrazilianState)}
-                                >
-                                    {Object.values(BrazilianState).map((uf) => (
-                                        <MenuItem key={uf} value={uf}>
-                                            {uf}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-
-                            <TextField
-                                label="Cidade"
-                                value={city}
-                                onChange={(e) => setCity(e.target.value)}
-                                fullWidth
-                            />
-                            <TextField
-                                label="Bairro"
-                                value={neighborhood}
-                                onChange={(e) => setNeighborhood(e.target.value)}
-                                fullWidth
-                            />
-                            <TextField
-                                label="Rua"
-                                value={street}
-                                onChange={(e) => setStreet(e.target.value)}
-                                fullWidth
-                            />
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="outlined-adornment-amount">Preço</InputLabel>
-                                <OutlinedInput
-                                    value={formatCurrency(value)}
-                                    onChange={(e) => {
-                                        const raw = e.target.value.replace(/\D/g, "");
-                                        const number = parseFloat(raw) / 100;
-                                        setValue(isNaN(number) ? 0 : number);
-                                    }}
-                                    id="outlined-adornment-amount"
-                                    label="Preço"
-                                />
-                            </FormControl>
-
-                            <TextField
-                                label="Link de Localização"
-                                type="url"
-                                value={localLink}
-                                onChange={(e) => setLocalLink(e.target.value)}
-                                fullWidth
-                            />
-
-                            <TextField
-                                label="Descrição do Imóvel"
-                                multiline
-                                minRows={3}
-                                value={immobileDescription}
-                                onChange={(e) => setImmobileDescription(e.target.value)}
-                                fullWidth
-                            />
-
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={hasScripture}
-                                        onChange={(e) => setHasScripture(e.target.checked)}
-                                    />
-                                }
-                                label="Escriturado"
-                            />
-
-                            <div className="flex justify-between">
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    sx={{ width: "40%" }}
-                                >
-                                    Salvar
-                                </Button>
-
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    sx={{ width: "40%" }}
-                                    onClick={(e) => {
+                            <Modal.Body>
+                                <form
+                                    className="flex flex-col gap-4"
+                                    onSubmit={(e) => {
                                         e.preventDefault();
-                                        resetForm();
+                                        saveImmobile();
                                     }}
                                 >
-                                    Cancelar
-                                </Button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                                    <FormSelect
+                                        label="Tipo de Imóvel"
+                                        selectedKey={immobileType}
+                                        onSelectionChange={(key) => setImmobileType(key as ImmobileTypesEnum)}
+                                        options={immobileTypeOptions}
+                                    />
+
+                                    <TextField value={localityInfo} onChange={setLocalityInfo}>
+                                        <Label>Titulo do imóvel</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField
+                                        value={postalCode}
+                                        onChange={(newValue) => {
+                                            const formatted = formatCEP(newValue);
+                                            setPostalCode(formatted);
+
+                                            const cleanCep = formatted.replace(/\D/g, "");
+                                            if (cleanCep.length === 8) {
+                                                fetchCepData(cleanCep);
+                                            }
+                                        }}
+                                    >
+                                        <Label>Código Postal</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <FormSelect
+                                        label="Estado"
+                                        selectedKey={state}
+                                        onSelectionChange={(key) => setState(key as BrazilianState)}
+                                        options={stateOptions}
+                                    />
+
+                                    <TextField value={city} onChange={setCity}>
+                                        <Label>Cidade</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField value={neighborhood} onChange={setNeighborhood}>
+                                        <Label>Bairro</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField value={street} onChange={setStreet}>
+                                        <Label>Rua</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField
+                                        value={formatCurrency(value)}
+                                        onChange={(newValue) => {
+                                            const raw = newValue.replace(/\D/g, "");
+                                            const number = parseFloat(raw) / 100;
+                                            setValue(isNaN(number) ? 0 : number);
+                                        }}
+                                    >
+                                        <Label>Preço</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField value={localLink} onChange={setLocalLink} type="url">
+                                        <Label>Link de Localização</Label>
+                                        <Input />
+                                    </TextField>
+
+                                    <TextField value={immobileDescription} onChange={setImmobileDescription}>
+                                        <Label>Descrição do Imóvel</Label>
+                                        <TextArea rows={3} />
+                                    </TextField>
+
+                                    <Checkbox isSelected={hasScripture} onChange={setHasScripture}>
+                                        <Checkbox.Content>
+                                            <Checkbox.Control>
+                                                <Checkbox.Indicator />
+                                            </Checkbox.Control>
+                                            Escriturado
+                                        </Checkbox.Content>
+                                    </Checkbox>
+
+                                    <div className="flex justify-between pt-2">
+                                        <Button type="submit" className="w-[45%]">
+                                            Salvar
+                                        </Button>
+
+                                        <Button
+                                            variant="danger"
+                                            className="w-[45%]"
+                                            onPress={resetForm}
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </div>
+                                </form>
+                            </Modal.Body>
+                        </Modal.Dialog>
+                    </Modal.Container>
+                </Modal.Backdrop>
             </Modal>
             {errorMessage && (
-                <Alert variant="filled" severity="error">
-                    {errorMessage}
+                <Alert status="danger" className="fixed bottom-4 left-1/2 z-[60] w-full max-w-md -translate-x-1/2">
+                    <Alert.Content>
+                        <Alert.Title>{errorMessage}</Alert.Title>
+                    </Alert.Content>
                 </Alert>
             )}
         </>

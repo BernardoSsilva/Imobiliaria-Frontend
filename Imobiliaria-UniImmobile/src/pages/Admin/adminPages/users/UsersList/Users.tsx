@@ -1,10 +1,12 @@
-import { Backdrop, CircularProgress, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, Chip } from "@heroui/react";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { Pen, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AppPagination } from "../../../../../components/AppPagination";
+import { LoadingOverlay } from "../../../../../components/LoadingOverlay";
 import type { UserEntity } from "../../../../../models/user";
 import { UserServices } from "../../../../../services/user-services";
 import { UserCreationModal } from "./components/UserCreationModal";
@@ -47,83 +49,90 @@ export function UsersList() {
     }, [atualPage, isModalOpen, isDeleteModalOpen]);
 
     return (
-        <div className="mt-3 w-[98%] h-[20%]">
-            <Backdrop
-                open={isLoading}
-            >
-                <div className="bg-white flex border-(--primary-color) border-2 rounded-xl p-4 items-center justify-center gap-1">
-
-                    <CircularProgress color="inherit" size={24} />
-                    Carregando Dados
-                </div>
-            </Backdrop>
+        <div className="flex h-full w-full flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+            <LoadingOverlay open={isLoading} />
 
             <UserCreationModal isModalOpen={isModalOpen} setIsModalOpen={(value) => setIsModalOpen(value)} userId={selectedUserId} setSelectedUserId={setSelectedUserId} />
             <UserDeleteDialog isOpen={isDeleteModalOpen} setIsOpen={setIsDeleteModalOpen} userId={selectedUserId ?? ""} setSelectedUserId={setSelectedUserId} />
 
-            <section className="flex justify-end w-full border-b-2 border-b-[var(--primary-color)] p-2">
-                <button onClick={() => setIsModalOpen(true)} className="p-3 bg-blue-400 rounded-full hover:bg-blue-500 transition-all duration-500">
-                    <Plus size={20} color="white" />
-                </button>
-            </section>
-            <div className="w-full max-h-[60vh] overflow-auto overflow-x-hidden">
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Nome do usuário</TableCell>
-                                <TableCell>Data de nascimento</TableCell>
-                                <TableCell>Data de criação</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Tipo de usuário</TableCell>
-                                <TableCell>Comandos</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {usersData.length > 0 && usersData.map((row) => (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.userName}</TableCell>
-                                    <TableCell>
-                                        {dayjs(row.bornDate).tz("America/Sao_Paulo").format("D [de] MMMM [de] YYYY")}
-                                    </TableCell>
-                                    <TableCell>
-                                        {dayjs(row.createdAt).tz("America/Sao_Paulo").format("D [de] MMMM [de] YYYY")}
-                                    </TableCell>
-                                    <TableCell>{row.userEmail}</TableCell>
-                                    <TableCell>{row.role}</TableCell>
-                                    <TableCell>
-                                        <div className="flex flex-row gap-1.5">
-                                            <button className="bg-amber-500 p-2 rounded-md hover:bg-amber-600 transition-colors duration-200 cursor-pointer" onClick={() => {
-                                                setSelectedUserId(row.id)
-                                                setIsModalOpen(true)
-                                            }}>
-                                                <Pen size={24} color="white" />
-                                            </button>
-
-                                            <button className="bg-red-500 p-2 rounded-md hover:bg-red-600 transition-colors duration-200 cursor-pointer" onClick={() => {
-                                                setSelectedUserId(row.id)
-                                                setIsDeleteModalOpen(true)
-                                            }}>
-                                                <Trash size={24} color="white" />
-                                            </button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-
+            <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                <h2 className="text-lg font-semibold text-(--primary-color)">Usuários cadastrados</h2>
+                <Button
+                    isIconOnly
+                    onPress={() => {
+                        setSelectedUserId(null)
+                        setIsModalOpen(true)
+                    }}
+                    className="rounded-full"
+                >
+                    <Plus size={20} />
+                </Button>
             </div>
 
-            <Pagination
-                page={atualPage}
-                count={pagesNumber}
-                onChange={(e: React.ChangeEvent<unknown>, value: number) => {
-                    console.log(e)
-                    setAtualPage(value);
-                }}
-            />
+            <div className="w-full min-w-0 flex-1 overflow-auto">
+                <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+                    <thead>
+                        <tr className="border-b border-gray-200 text-xs tracking-wide text-gray-500 uppercase">
+                            <th className="py-3 pr-3">Nome do usuário</th>
+                            <th className="py-3 pr-3">Data de nascimento</th>
+                            <th className="py-3 pr-3">Data de criação</th>
+                            <th className="py-3 pr-3">Email</th>
+                            <th className="py-3 pr-3">Tipo de usuário</th>
+                            <th className="py-3 pr-3">Comandos</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {usersData.length > 0 && usersData.map((row) => (
+                            <tr key={row.id} className="hover:bg-gray-50">
+                                <td className="py-3 pr-3 font-medium">{row.userName}</td>
+                                <td className="py-3 pr-3">
+                                    {dayjs(row.bornDate).tz("America/Sao_Paulo").format("D [de] MMMM [de] YYYY")}
+                                </td>
+                                <td className="py-3 pr-3">
+                                    {dayjs(row.createdAt).tz("America/Sao_Paulo").format("D [de] MMMM [de] YYYY")}
+                                </td>
+                                <td className="py-3 pr-3">{row.userEmail}</td>
+                                <td className="py-3 pr-3">
+                                    <Chip size="sm" className="bg-(--primary-color) text-white">{row.role}</Chip>
+                                </td>
+                                <td className="py-3 pr-3">
+                                    <div className="flex flex-row gap-1.5">
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            className="bg-amber-500 hover:bg-amber-600"
+                                            onPress={() => {
+                                                setSelectedUserId(row.id)
+                                                setIsModalOpen(true)
+                                            }}
+                                        >
+                                            <Pen size={18} />
+                                        </Button>
+
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            variant="danger"
+                                            onPress={() => {
+                                                setSelectedUserId(row.id)
+                                                setIsDeleteModalOpen(true)
+                                            }}
+                                        >
+                                            <Trash size={18} />
+                                        </Button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {usersData.length === 0 && !isLoading && (
+                    <p className="py-10 text-center text-sm text-gray-500">Nenhum usuário cadastrado</p>
+                )}
+            </div>
+
+            <AppPagination page={atualPage} count={pagesNumber} onChange={setAtualPage} />
         </div>
     );
 }

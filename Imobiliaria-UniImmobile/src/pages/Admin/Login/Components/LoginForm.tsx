@@ -1,11 +1,11 @@
+import { Alert, Button, Input, InputGroup, Label, TextField } from "@heroui/react"
+import type { AxiosResponse } from "axios"
+import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
-import "../../../../styles/index.css"
+import { useNavigate } from "react-router"
 import logo from "../../../../assets/ApplicationLogo.png"
-import { useNavigate } from "react-router";
-import { UserServices } from "../../../../services/user-services";
-import { Alert, Backdrop, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from "@mui/material";
-import type { AxiosResponse } from "axios";
-import { Eye, EyeClosed } from "lucide-react";
+import { LoadingOverlay } from "../../../../components/LoadingOverlay"
+import { UserServices } from "../../../../services/user-services"
 
 export function LoginForm() {
     const navigate = useNavigate();
@@ -46,84 +46,65 @@ export function LoginForm() {
 
     const [showPassword, setShowPassword] = useState(false);
 
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
-    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
-
     return (
         <>
-            <Backdrop
-                open={isLoading}
-            >
-                <div className="bg-white flex border-(--primary-color) border-2 rounded-xl p-4 items-center justify-center gap-1">
+            <LoadingOverlay open={isLoading} label="Processando dados" />
 
-                    <CircularProgress color="inherit" size={24} />
-                    Processando Dados
-                </div>
-            </Backdrop>
-            <div className="w-1/2 flex flex-col items-center">
+            <div className="flex w-full flex-col items-center justify-center px-6 py-10 sm:w-1/2">
 
-                <form className=" w-3/5 h-1/2  mt-10 items-center flex flex-col">
-                    <img className="w-1/4" src={logo} alt="Logo da aplicação" />
-
-                    <div className="mt-5 w-full">
-
-                        <TextField className="border border-solid rounded-md w-full" required type="email" label="Informe seu email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
-                    </div>
-
-                    <div className="mt-5 w-full">
-                        <FormControl className="border border-solid rounded-md w-full" variant="outlined" >
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                            <OutlinedInput
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value) }}
-                                id="outlined-adornment-password"
-                                type={showPassword ? 'text' : 'password'}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label={
-                                                showPassword ? 'hide the password' : 'display the password'
-                                            }
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            onMouseUp={handleMouseUpPassword}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <EyeClosed /> : <Eye />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Digite sua Senha"
-                            />
-                        </FormControl>
-                    </div>
-
-                    <button onClick={(e) => {
+                <form
+                    className="flex w-full max-w-sm flex-col items-center gap-5"
+                    onSubmit={(e) => {
                         e.preventDefault();
                         executeLogin();
-                    }} className="p-2 px-12 bg-[var(--primary-color)] mt-7 w-full text-black hover:bg-[var(--primary-color-hover)] transition-colors duration-300 rounded-md">
-                        <p className="font-semibold text-white">
-                            Realizar login
-                        </p>
-                    </button>
+                    }}
+                >
+                    <img className="w-28" src={logo} alt="Logo da aplicação" />
+
+                    <TextField
+                        className="w-full"
+                        isRequired
+                        type="email"
+                        value={email}
+                        onChange={setEmail}
+                    >
+                        <Label>Informe seu email</Label>
+                        <Input placeholder="voce@email.com" />
+                    </TextField>
+
+                    <TextField className="w-full" isRequired value={password} onChange={setPassword}>
+                        <Label>Senha</Label>
+                        <InputGroup>
+                            <InputGroup.Input type={showPassword ? "text" : "password"} placeholder="Digite sua senha" />
+                            <InputGroup.Suffix>
+                                <Button
+                                    isIconOnly
+                                    variant="ghost"
+                                    size="sm"
+                                    onPress={() => setShowPassword((show) => !show)}
+                                    aria-label={showPassword ? "Ocultar senha" : "Exibir senha"}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </Button>
+                            </InputGroup.Suffix>
+                        </InputGroup>
+                    </TextField>
+
+                    <Button type="submit" fullWidth className="mt-2">
+                        Realizar login
+                    </Button>
                 </form>
-                <h2 className="text-[var(--primary-color)] mt-30 font-semibold">
+
+                <h2 className="mt-20 text-center font-semibold text-(--primary-color)">
                     SUA SATISFAÇÃO É O NOSSO LEMA!
                 </h2>
+
                 {errorMessage && (
-                    <Alert variant="filled" severity="error">
-                        {errorMessage}
+                    <Alert status="danger" className="mt-6 w-full max-w-sm">
+                        <Alert.Content>
+                            <Alert.Title>{errorMessage}</Alert.Title>
+                        </Alert.Content>
                     </Alert>
-
-
                 )}
             </div>
         </>
