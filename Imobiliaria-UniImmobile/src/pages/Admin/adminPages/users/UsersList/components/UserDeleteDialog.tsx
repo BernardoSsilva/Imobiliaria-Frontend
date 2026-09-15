@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@mui/material";
+import { ConfirmDialog } from "../../../../../../components/ConfirmDialog";
 import { UserServices } from "../../../../../../services/user-services";
 
 type Props = {
@@ -21,35 +21,15 @@ export function UserDeleteDialog({ isOpen, setIsOpen, userId, setSelectedUserId 
     }
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-        >
-            <DialogTitle>{"Confirme a exclusão"}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Voce deseja realmente realizar a exclusão dos dados deste usuário?
-                    Os dados não poderão ser restaurados
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => confirmExclusion()}
-                    variant="contained"
-                    color="error"
-                >
-                    Confirmar
-                </Button>
-                <Button
-                    onClick={() => {
-                        setIsOpen(false)
-                        setSelectedUserId(null)
-                    }}
-                    variant="contained"
-                    color="info"
-                >
-                    Cancelar
-                </Button>
-            </DialogActions>
-        </Dialog >
+        <ConfirmDialog
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                setIsOpen(open)
+                if (!open) setSelectedUserId(null)
+            }}
+            title="Confirme a exclusão"
+            description="Você deseja realmente realizar a exclusão dos dados deste usuário? Os dados não poderão ser restaurados."
+            onConfirm={confirmExclusion}
+        />
     )
 }

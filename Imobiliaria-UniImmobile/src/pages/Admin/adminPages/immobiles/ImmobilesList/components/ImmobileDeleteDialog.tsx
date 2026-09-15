@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { ConfirmDialog } from "../../../../../../components/ConfirmDialog";
 import { ImmobilesServices } from "../../../../../../services/immobiles-services";
 
 type Props = {
@@ -21,35 +21,15 @@ export function ImmobileDeleteDialog({ isOpen, setIsOpen, immobileId, setSelecte
     }
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-        >
-            <DialogTitle>{"Confirme a exclusão"}</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Voce deseja realmente realizar a exclusão dos dados deste imóvel?
-                    Os dados não poderão ser restaurados
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => confirmExclusion()}
-                    variant="contained"
-                    color="error"
-                >
-                    Confirmar
-                </Button>
-                <Button
-                    onClick={() => {
-                        setIsOpen(false)
-                        setSelectedImmobileId(null)
-                    }}
-                    variant="contained"
-                    color="info"
-                >
-                    Cancelar
-                </Button>
-            </DialogActions>
-        </Dialog >
+        <ConfirmDialog
+            isOpen={isOpen}
+            onOpenChange={(open) => {
+                setIsOpen(open)
+                if (!open) setSelectedImmobileId(null)
+            }}
+            title="Confirme a exclusão"
+            description="Você deseja realmente realizar a exclusão dos dados deste imóvel? Os dados não poderão ser restaurados."
+            onConfirm={confirmExclusion}
+        />
     )
 }

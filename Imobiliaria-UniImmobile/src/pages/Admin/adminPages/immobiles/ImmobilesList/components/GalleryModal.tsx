@@ -1,8 +1,9 @@
-import { Modal, IconButton, Button, CircularProgress, Backdrop } from "@mui/material"
+import { Button, Modal } from "@heroui/react"
+import { Trash2, Upload } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { LoadingOverlay } from "../../../../../../components/LoadingOverlay"
 import type { ImageEntity } from "../../../../../../models/image"
 import { ImageServices } from "../../../../../../services/images-services"
-import { X, Trash2, Upload } from "lucide-react"
 
 type Props = {
     isOpen: boolean
@@ -75,80 +76,62 @@ export function GalleryModal(
     }, [isOpen])
 
     return (
-        <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+        <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+            <Modal.Backdrop>
+                <Modal.Container size="lg">
+                    <Modal.Dialog className="h-[70vh] w-[80vw] max-w-4xl">
+                        <LoadingOverlay open={isLoading} />
 
-            <div className="fixed inset-0 flex items-center justify-center">
-                <div
-                    className="relative bg-white w-[75vw] h-[60vh] p-4 rounded-2xl shadow-lg overflow-scroll flex flex-col
-                    [&::-webkit-scrollbar]:w-2
-                    [&::-webkit-scrollbar-track]:bg-transparent
-                    [&::-webkit-scrollbar-thumb]:bg-gray-300
-                    dark:[&::-webkit-scrollbar-track]:bg-transparent
-                    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-                >
-                    <Backdrop
-                        open={isLoading}
-                    >
-                        <div className="bg-white flex border-(--primary-color) border-2 rounded-xl p-4 items-center justify-center gap-1">
+                        <Modal.Header>
+                            <Modal.Heading>Galeria de imagens</Modal.Heading>
+                            <Modal.CloseTrigger />
+                        </Modal.Header>
 
-                            <CircularProgress color="inherit" size={24} />
-                            Carregando Dados
-                        </div>
-                    </Backdrop>
-
-
-                    {/* Cabeçalho com botões */}
-                    <div className="flex justify-between items-center mb-4">
-                        <Button
-                            variant="contained"
-                            startIcon={<Upload size={18} />}
-                            onClick={handleUploadClick}
-                        >
-                            Enviar Imagem
-                        </Button>
-
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            accept="image/*"
-                            hidden
-                        />
-
-                        <IconButton onClick={() => setIsOpen(false)}>
-                            <X size={22} />
-                        </IconButton>
-                    </div>
-
-                    {/* Galeria */}
-                    <div className="grid grid-cols-3 gap-3">
-                        {imagesData.length > 0 ? imagesData.map((item, index) => (
-                            <div
-                                key={index}
-                                className="relative group rounded-lg overflow-hidden"
-                            >
-                                <img
-                                    className="w-full h-48 object-cover transition duration-300 group-hover:blur-sm group-hover:brightness-50"
-                                    src={item.imageUrl}
-                                    alt={`Imagem ${index}`}
+                        <Modal.Body className="overflow-y-auto">
+                            <div className="mb-4 flex justify-end">
+                                <Button variant="outline" onPress={handleUploadClick}>
+                                    <Upload size={18} />
+                                    Enviar Imagem
+                                </Button>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    accept="image/*"
+                                    hidden
                                 />
-                                <div
-                                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-                                >
-                                    <button
-                                        className="bg-red-600 p-2 rounded-full shadow-lg hover:bg-red-700 transition cursor-pointer"
-                                        onClick={() => handleDelete(item.id)}
-                                    >
-                                        <Trash2 size={22} color="white" />
-                                    </button>
-                                </div>
                             </div>
-                        )) : <h2 className="font-extrabold text-red-500">
-                            Nenhuma Imagem Registrada
-                        </h2>}
-                    </div>
-                </div>
-            </div>
+
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                                {imagesData.length > 0 ? imagesData.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="group relative overflow-hidden rounded-lg"
+                                    >
+                                        <img
+                                            className="h-40 w-full object-cover transition duration-300 group-hover:blur-sm group-hover:brightness-50"
+                                            src={item.imageUrl}
+                                            alt={`Imagem ${index}`}
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+                                            <button
+                                                className="cursor-pointer rounded-full bg-red-600 p-2 shadow-lg transition hover:bg-red-700"
+                                                onClick={() => handleDelete(item.id)}
+                                            >
+                                                <Trash2 size={22} color="white" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <p className="col-span-full py-10 text-center font-semibold text-gray-500">
+                                        Nenhuma Imagem Registrada
+                                    </p>
+                                )}
+                            </div>
+                        </Modal.Body>
+                    </Modal.Dialog>
+                </Modal.Container>
+            </Modal.Backdrop>
         </Modal>
     )
 }

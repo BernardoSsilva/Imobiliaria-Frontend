@@ -1,16 +1,17 @@
 import logo from "../assets/NavBarLogo.png"
 
-
-
 export function NavBar({ nameTitle = "" }) {
     return (
-        <nav className="bg-(--primary-color)  p-4 w-[100%] h-25">
-            <div className="flex items-center justify-between w-auto">
-                <img className="w-30" src={logo} alt="" />
-                <div>
-                    <h3 className="text-(--color-font-title) font-semibold text-[25px] text-shadow-lg shadow-gray-800">{nameTitle}</h3>
-                </div>
+        <nav className="sticky top-0 z-30 w-full bg-(--primary-color) shadow-lg shadow-black/20">
+            <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6">
+                <img className="h-12 w-auto object-contain sm:h-14" src={logo} alt="UniImmobile" />
+                {nameTitle && (
+                    <h3 className="truncate text-lg font-semibold tracking-tight text-white sm:text-2xl">
+                        {nameTitle}
+                    </h3>
+                )}
             </div>
+            <div className="h-[3px] w-full bg-gradient-to-r from-(--brand-sand-light) via-(--brand-sand) to-(--brand-sand-light) opacity-70" />
         </nav>
     )
 }
